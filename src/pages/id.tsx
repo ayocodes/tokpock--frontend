@@ -5,6 +5,7 @@ import Operations from "../components/Operations";
 import ProjectChoice from "../components/ProjectChoice";
 import ReflectCard from "../components/ReflectCard";
 import ReflectIndicator from "../components/ReflectIndicator";
+import Exp from "../components/Question";
 
 const SBody = styled.div`
   display: flex;
@@ -27,14 +28,14 @@ const SBox = styled.div`
   margin-bottom: 5rem;
 `;
 
-const projectInit = false;
+const projectInit = true;
 
 const getPane = () => {
   if (projectInit) {
     return (
       <>
         <ReflectIndicator />
-        <ReflectCard />
+        <Exp />
         <Operations />
       </>
     );

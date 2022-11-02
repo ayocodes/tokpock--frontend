@@ -10,8 +10,7 @@ interface ITitleProps {
 const Simg = styled.img`
   display: none;
   transition: 200ms ease-in-out;
-
-`
+`;
 
 const SNavButton = styled.div`
   display: flex;
@@ -57,10 +56,10 @@ const SNavBarContainer = styled.div`
 const SNavBar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center ;
+  justify-content: center;
   width: 100%;
   position: sticky;
-  top: 1rem; 
+  top: 1rem;
   z-index: 1;
 `;
 
@@ -84,7 +83,6 @@ const Navbar = () => {
         <SBox>
           <SNavButtons>
             <NavButton>Project 1</NavButton>
-            <NavButton>Project 2</NavButton>
           </SNavButtons>
           <img
             src="add.svg"

@@ -14,7 +14,6 @@ const SMain = styled.div`
   margin: 1rem;
   display: flex;
   flex-direction: column;
-
 `;
 
 const SBodyBox = styled.div`
@@ -25,7 +24,7 @@ const App = () => {
   return (
     <SBody>
       <SMain>
-          <Navbar />
+        <Navbar />
         <SBodyBox>
           <SideBar />
           <Projects />

@@ -18,8 +18,6 @@ const SButtonText = styled.div`
   font-size: 1.25rem;
   align-items: center;
   font-weight: 400;
-  font-size: 1.25rem;
-  line-height: 2rem;
 `;
 
 const ConnectWallet = () => {

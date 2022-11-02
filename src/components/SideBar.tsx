@@ -12,6 +12,7 @@ const SSideBar = styled.div`
 const SItem = styled.div`
   display: flex;
   margin-top: 1.5rem;
+  cursor: pointer;
 `;
 
 const SItemP = styled.p`

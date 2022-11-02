@@ -18,6 +18,7 @@ const SNewProject = styled.div`
   justify-content: space-between;
   margin: 1.25rem 0;
   padding: 1rem;
+  cursor: pointer;
 `;
 
 const SCreatedProjects = styled.div`

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import SubmitButton from "./SubmitButton";
 
 const SCard = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -22,27 +23,12 @@ const SQA = styled.p`
   padding-bottom: 1rem;
 `;
 
-const STextBorderContainer = styled.div`
-  display: flex;
-  position: relative;
-
-  flex: 1;
-`;
-
-const STextBorder = styled.div`
-  mix-blend-mode: overlay;
-  position: absolute;
-  inset: 0;
-  border: 2px solid #ffffff;
-  border-radius: 0.5rem;
-`;
-
 const STextArea = styled.textarea`
-  border: 2px solid transparent;
+  border: 2px solid #626575;
   font-size: 16px;
   padding: 1rem;
   margin-top: 0.2em;
-  margin-bottom: 0;
+  margin-bottom: 2em;
   border-radius: 0.5rem;
   background-color: transparent;
   resize: none;
@@ -53,7 +39,6 @@ const STextArea = styled.textarea`
 
 const SButton = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
-  /* background: yellow; */
   width: 1.5rem;
   cursor: pointer;
   flex: 1;
@@ -68,7 +53,7 @@ const SButtonRight = styled(SButton)`
 
 const SBox = styled.div`
   display: flex;
-`
+`;
 
 const ReflectCard: React.FC = () => {
   return (
@@ -78,15 +63,10 @@ const ReflectCard: React.FC = () => {
         <STitle>Question</STitle>
         <SQA>Hey, how are you feeling today?</SQA>
         <STitle>Response</STitle>
-        <STextBorderContainer>
-          <STextArea
-            id="description"
-          />
-          <STextBorder />
-        </STextBorderContainer>
+        <STextArea id="description" />
+        <SubmitButton />
       </SCard>
-      <SButtonRight/>
-
+      <SButtonRight />
     </SBox>
   );
 };
