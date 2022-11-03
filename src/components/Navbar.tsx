@@ -77,6 +77,7 @@ const SBox = styled.div`
 `;
 
 const Navbar = () => {
+
   return (
     <SNavBar>
       <SNavBarContainer>

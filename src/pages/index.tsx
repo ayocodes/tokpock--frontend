@@ -24,8 +24,7 @@ const SAppName = styled.p`
   line-height: 2rem;
   margin-bottom: 4rem;
   font-weight: 500;
-  color: #333333;
-;
+  color: #333333; ;
 `;
 
 const SBox = styled.div`
@@ -37,19 +36,25 @@ const SBox = styled.div`
   @media (max-width: 957px) {
     justify-content: center;
   } ;
-
 `;
 
 const SImg = styled.div`
   width: 25rem;
   height: 25rem;
   border-radius: 50%;
+  /* overflow: hidden; */
+  /* background-image: url("wallet.webp"); */
   background-color: #e384ea;
 
   @media (max-width: 957px) {
     margin: 5rem 0;
   } ;
+`;
 
+const Simg = styled.img`
+margin-left: -40px;
+  width: 29rem;
+  /* border-radius: 50%; */
 `;
 
 const Home: NextPage = () => {
@@ -66,7 +71,9 @@ const Home: NextPage = () => {
           <SAppName>TokPock</SAppName>
           <SBox>
             <IntroMessage />
-            <SImg />
+            <SImg>
+              <Simg src="wallet.png" alt="" />
+            </SImg>
           </SBox>
         </SMain>
       </SBody>

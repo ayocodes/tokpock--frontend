@@ -57,11 +57,16 @@ const SRing2 = styled(SRing1)`
   top: 230.5px;
 `;
 
+const SRingBox = styled.div`
+`
+
 const withdraw = () => {
   return (
     <SModal>
-      <SRing1 src="ring.svg" alt="" />
-      <SRing2 src="ring.svg" alt="" />
+      <SRingBox>
+        <SRing1 src="ring.svg" alt="" />
+        <SRing2 src="ring.svg" alt="" />
+      </SRingBox>
       <SWithdraw>
         <STitle>Email</STitle>
         <STextArea id="description" />

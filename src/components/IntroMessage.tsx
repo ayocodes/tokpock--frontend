@@ -61,7 +61,7 @@ const IntroMessage = () => {
         </SExplainP>
       </SExplain>
       <SBox>
-        <Button href={"/app"}>Create wallet</Button>
+        <Button href={"/id"}>Create wallet</Button>
         <Button href={"/withdraw"}>Withdraw</Button>
       </SBox>
     </SIntro>

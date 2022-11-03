@@ -1,5 +1,7 @@
-import React from "react";
+import Link from "next/link";
+import React, { useContext } from "react";
 import styled from "styled-components";
+import InfoModalContext from "../context/infoModal";
 
 const SOperations = styled.div`
   position: fixed;
@@ -17,6 +19,7 @@ const SOperations = styled.div`
 `;
 
 const SImg = styled.img`
+  display: grid;
   cursor: pointer;
   transition: transform 200ms linear;
   :hover {
@@ -25,12 +28,19 @@ const SImg = styled.img`
 `;
 
 const Operations = () => {
+  const [_, setModal] = useContext<any>(InfoModalContext);
+
   return (
     <SOperations>
-      <SImg src="Home.svg" alt="" />
-      <SImg src="Chat.svg" alt="" />
-      <SImg src="Document.svg" alt="" />
-      <SImg src="Info.svg" alt="" />
+      <Link href={"/"}>
+        <a>
+          <SImg src="Home.svg" alt="" />
+        </a>
+      </Link>
+      <a href="https://github.com/ayocodes/tokpock" target="_blank">
+        <SImg src="Document.svg" alt="" />
+      </a>
+      <SImg src="Info.svg" alt="" onClick={() => setModal(true)} />
     </SOperations>
   );
 };

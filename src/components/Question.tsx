@@ -59,6 +59,7 @@ const SBox = styled.div`
 
 const SSubmitButton = styled.div`
   height: 3rem;
+  /* padding: 5px 0; */
   width: 100%;
   margin: 10px 0;
   background: #565967;
@@ -302,7 +303,7 @@ const InputUI = ({ inputs, choiceState, setChoiceState }) => {
   );
 };
 
-const destinyTree = [
+const destinyTree1 = [
   {
     id: "genesis",
     type: "question",
@@ -402,6 +403,184 @@ const destinyTree = [
       },
     ],
   },
+];
+
+
+const destinyTree = [
+  {
+    id: "genesis",
+    type: "question",
+    question: "Are you creating this wallet for yourself or someone else",
+    responses: [
+      {
+        response: "For myself",
+        action: () => {
+          return "1";
+        },
+      },
+      {
+        response: "For someone else",
+        action: () => {
+          return "5";
+        },
+      },
+    ],
+  },
+  {
+    id: "1",
+    type: "input",
+    inputs: [
+      {
+        id: "amount",
+        name: "Amount",
+        placeholder: "amount to send",
+        type: "number",
+      },
+      {
+        id: "accountName",
+        name: "AccountName",
+        placeholder: "account name",
+        type: "string",
+      },
+      {
+        id: "password",
+        name: "Password",
+        placeholder: "password",
+        type: "string",
+      },
+    ],
+    responses: [
+      {
+        response: "Continue",
+        action: () => {
+          return "2";
+        },
+      },
+    ],
+  },
+  {
+    id: "2",
+    type: "question",
+    question: "Will you like us to send you an email of your credential's?",
+    responses: [
+      {
+        response: "Yes",
+        action: () => {
+          return "3";
+        },
+      },
+      {
+        response: "No",
+        action: () => {
+          return "4";
+        },
+      },
+    ],
+  },
+  {
+    id: "3",
+    type: "input",
+    inputs: [
+      {
+        id: "personalEmail",
+        name: "PersonalEmail",
+        placeholder: "email",
+        type: "email",
+      }
+    ],
+    responses: [
+      {
+        response: "Continue",
+        action: () => {
+          return "4";
+        },
+      },
+    ],
+  },
+  {
+    id: "4",
+    type: "question",
+    question: "Alright, that's all",
+    responses: [
+      {
+        response: "Deploy",
+        action: () => {
+          return "genesis";
+        },
+      },
+    ],
+  },
+  {
+    id: "5",
+    type: "question",
+    question: "Will you provide their email so we send them their wallet credentials?",
+    responses: [
+      {
+        response: "Yes",
+        action: () => {
+          return "6";
+        },
+      },
+      {
+        response: "No",
+        action: () => {
+          return "7";
+        },
+      },
+    ],
+  },
+  {
+    id: "6",
+    type: "input",
+    inputs: [
+      {
+        id: "receiversEmail",
+        name: "ReceiversEmail",
+        placeholder: "Receivers email",
+        type: "email",
+      },
+    ],
+    responses: [
+      {
+        response: "Continue",
+        action: () => {
+          return "7";
+        },
+      },
+    ],
+  },
+  {
+    id: "7",
+    type: "input",
+    inputs: [
+      {
+        id: "amount",
+        name: "Amount",
+        placeholder: "amount to send",
+        type: "number",
+      },
+      {
+        id: "accountName",
+        name: "AccountName",
+        placeholder: "account name",
+        type: "string",
+      },
+      {
+        id: "password",
+        name: "Password",
+        placeholder: "password",
+        type: "string",
+      },
+    ],
+    responses: [
+      {
+        response: "Continue",
+        action: () => {
+          return "4";
+        },
+      },
+    ],
+  }
 ];
 
 export default Exp;

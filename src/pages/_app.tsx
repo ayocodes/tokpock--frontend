@@ -4,17 +4,21 @@ import { ThemeProvider } from "styled-components";
 import Scaffold from "../components/Scaffold";
 import GlobalStyle from "../styles/global";
 import { darkTheme, lightTheme } from "../theme/theme";
+import InfoModalContext from "../context/infoModal";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [infoModal, setInfoModal] = useState(false);
   const [theme] = useState("light");
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-      <GlobalStyle />
-      <Scaffold>
-        <Component {...pageProps} />
-      </Scaffold>
-    </ThemeProvider>
+    <InfoModalContext.Provider value={[infoModal, setInfoModal]}>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <Scaffold>
+          <Component {...pageProps} />
+        </Scaffold>
+      </ThemeProvider>
+    </InfoModalContext.Provider>
   );
 }
 

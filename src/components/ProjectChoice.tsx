@@ -5,9 +5,22 @@ interface CardStyleProps {
   color: any;
 }
 
+interface IProjectInitProps {
+  setProjectInit: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SBody = styled.div`
+  display: flex;
+  justify-content: center;
+  /* background: red; */
+  width: 100%;
+`;
+
 const SProjectChoiceBox = styled.div`
   display: flex;
   width: 100%;
+  max-width: 80vw;
+
   justify-content: center;
   flex-direction: column;
 `;
@@ -30,9 +43,11 @@ const SCard = styled.div<CardStyleProps>`
 const SCardBox = styled.div`
   margin-top: 2rem;
   display: grid;
+  place-content: center;
+  /* background-color: white; */
   /* align-items: flex-start; */
   gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
 `;
 
 const STitle = styled.p`
@@ -56,16 +71,20 @@ const projectChoice = [
   },
 ];
 
-const ProjectChoice = () => {
+const ProjectChoice: React.FC<IProjectInitProps> = ({ setProjectInit }) => {
   return (
-    <SProjectChoiceBox>
-      <STitle>What do you want to do?</STitle>
-      <SCardBox>
-        {projectChoice.map((x) => (
-          <SCard color={x.color}>{x.title}</SCard>
-        ))}
-      </SCardBox>
-    </SProjectChoiceBox>
+    <SBody>
+      <SProjectChoiceBox>
+        <STitle>What do you want to do?</STitle>
+        <SCardBox>
+          {projectChoice.map((x) => (
+            <SCard onClick={() => setProjectInit(true)} color={x.color}>
+              {x.title}
+            </SCard>
+          ))}
+        </SCardBox>
+      </SProjectChoiceBox>
+    </SBody>
   );
 };
 

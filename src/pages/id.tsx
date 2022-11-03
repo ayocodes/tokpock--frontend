@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Operations from "../components/Operations";
@@ -28,9 +28,8 @@ const SBox = styled.div`
   margin-bottom: 5rem;
 `;
 
-const projectInit = true;
-
 const getPane = () => {
+  const [projectInit, setProjectInit] = useState(false);
   if (projectInit) {
     return (
       <>
@@ -40,7 +39,7 @@ const getPane = () => {
       </>
     );
   } else {
-    return <ProjectChoice />;
+    return <ProjectChoice setProjectInit={setProjectInit} />;
   }
 };
 
