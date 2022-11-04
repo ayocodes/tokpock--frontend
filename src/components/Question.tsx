@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import DecisionLooper from "./DecisionLooper";
-import DeployContract from "./DeployContract";
+import DeployWallet from "./DeployWallet";
 
 const SCard = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -113,7 +113,13 @@ const Exp = () => {
           setNavigating={setNavigating}
           pruneState={pruneState}
         />
-        <DeployContract></DeployContract>
+        <DeployWallet
+          amount={0}
+          accountName={""}
+          password={""}
+          personalEmail={""}
+          receiversEmail={""}
+        />
       </SCard>
       <SButtonRight onClick={() => navigator("forward")} />
     </SBox>

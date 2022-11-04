@@ -52,7 +52,7 @@ const SImg = styled.div`
 `;
 
 const Simg = styled.img`
-margin-left: -40px;
+  margin-left: -40px;
   width: 29rem;
   /* border-radius: 50%; */
 `;

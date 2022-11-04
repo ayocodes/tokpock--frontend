@@ -1,11 +1,10 @@
-import React, { useCallback, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Operations from "../components/Operations";
 import ProjectChoice from "../components/ProjectChoice";
-import ReflectCard from "../components/ReflectCard";
-import ReflectIndicator from "../components/ReflectIndicator";
 import Question from "../components/Question";
+import ReflectIndicator from "../components/ReflectIndicator";
 
 const SBody = styled.div`
   display: flex;
