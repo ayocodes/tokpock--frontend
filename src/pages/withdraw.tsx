@@ -60,7 +60,7 @@ const SRing2 = styled(SRing1)`
 const SRingBox = styled.div`
 `
 
-const withdraw = () => {
+const Withdraw = () => {
   return (
     <SModal>
       <SRingBox>
@@ -82,4 +82,4 @@ const withdraw = () => {
   );
 };
 
-export default withdraw;
+export default Withdraw;

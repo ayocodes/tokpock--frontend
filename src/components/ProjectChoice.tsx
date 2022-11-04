@@ -47,7 +47,7 @@ const SCardBox = styled.div`
   /* background-color: white; */
   /* align-items: flex-start; */
   gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
 `;
 
 const STitle = styled.p`
