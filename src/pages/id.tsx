@@ -5,7 +5,7 @@ import Operations from "../components/Operations";
 import ProjectChoice from "../components/ProjectChoice";
 import ReflectCard from "../components/ReflectCard";
 import ReflectIndicator from "../components/ReflectIndicator";
-import Exp from "../components/Question";
+import Question from "../components/Question";
 
 const SBody = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const getPane = () => {
     return (
       <>
         <ReflectIndicator />
-        <Exp />
+        <Question />
         <Operations />
       </>
     );

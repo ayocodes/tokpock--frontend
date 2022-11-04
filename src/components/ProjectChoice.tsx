@@ -57,14 +57,14 @@ const STitle = styled.p`
 `;
 
 const projectChoice = [
-  {
-    title: "Save NFT",
-    color: "#221CA7",
-  },
-  {
-    title: "Save Tokens",
-    color: "#FF3070",
-  },
+  // {
+  //   title: "Save NFT",
+  //   color: "#221CA7",
+  // },
+  // {
+  //   title: "Save Tokens",
+  //   color: "#FF3070",
+  // },
   {
     title: "Save Algo",
     color: "#FF30F7",
