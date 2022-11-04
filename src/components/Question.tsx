@@ -57,7 +57,7 @@ const SBox = styled.div`
   width: 23rem;
 `;
 
-const SSubmitButton = styled.div`
+const SResponseButton = styled.div`
   height: 3rem;
   /* padding: 5px 0; */
   width: 100%;
@@ -236,7 +236,7 @@ const ResponseButtonsUI = ({
     const inState = choiceState[choiceId] === globalId;
 
     return (
-      <SSubmitButton
+      <SResponseButton
         key={globalId}
         style={{ border: !!inState ? "2px purple solid" : "0px" }}
         onClick={() => {
@@ -262,7 +262,7 @@ const ResponseButtonsUI = ({
         }}
       >
         {element.response}
-      </SSubmitButton>
+      </SResponseButton>
     );
   });
 
@@ -500,10 +500,10 @@ const destinyTree = [
   {
     id: "4",
     type: "question",
-    question: "Alright, that's all",
+    question: "Alright, let's create your wallet!",
     responses: [
       {
-        response: "Deploy",
+        response: "Create wallet",
         action: () => {
           return "genesis";
         },
