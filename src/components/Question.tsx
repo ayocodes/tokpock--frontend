@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import styled from "styled-components";
 import DecisionLooper from "./DecisionLooper";
+import DeployContract from "./DeployContract";
 
 const SCard = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -11,8 +12,6 @@ const SCard = styled.div`
   padding: 1.6rem 0;
   position: relative;
 `;
-
-
 
 const SButton = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -33,8 +32,6 @@ const SBox = styled.div`
   width: 23rem;
 `;
 
-
-
 const Exp = () => {
   const [choiceState, setChoiceState] = useState({});
   const [choiceId, setChoiceId] = useState("genesis");
@@ -45,7 +42,7 @@ const Exp = () => {
   console.log(choiceIdHistory);
 
   const navigator = useCallback(
-    (action) => {
+    (action: string) => {
       let prevIdIndex;
       let newChoiceId;
 
@@ -69,17 +66,28 @@ const Exp = () => {
             ];
           break;
 
+        case "freeze":
+          prevIdIndex = choiceIdHistory.findIndex((id) => id === choiceId);
+          newChoiceId = choiceIdHistory[prevIdIndex];
+          break;
+
         default:
+          prevIdIndex = 0;
+          newChoiceId = "";
           break;
       }
 
-      prevIdIndex >= 0 && setChoiceId(newChoiceId);
+      if (prevIdIndex > 0) {
+        setChoiceId(newChoiceId);
+      } else if (action === "forward") {
+        setChoiceId(newChoiceId);
+      }
     },
     [choiceId, choiceIdHistory]
   );
 
   const pruneState = useCallback(
-    ({ choiceId }) => {
+    ({ choiceId }: { choiceId: string }) => {
       const length = choiceIdHistory.length;
       const index = choiceIdHistory.findIndex((x) => x === choiceId);
       const paddedIndex = index + 1;
@@ -105,15 +113,12 @@ const Exp = () => {
           setNavigating={setNavigating}
           pruneState={pruneState}
         />
-
+        <DeployContract></DeployContract>
       </SCard>
       <SButtonRight onClick={() => navigator("forward")} />
     </SBox>
   );
 };
-
-
-
 
 const destinyTree1 = [
   {
