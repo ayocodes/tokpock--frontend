@@ -4,11 +4,7 @@ import DecisionLooper from "./DecisionLooper";
 import DeployWallet from "./DeployWallet";
 
 interface IChoiceState {
-  amount: string;
-  accountName: string;
-  password: string;
-  personalEmail: string;
-  receiversEmail: string;
+  [key: string | number]: string;
 }
 
 const SCard = styled.div`
@@ -50,7 +46,7 @@ const Question = () => {
   });
   const [choiceId, setChoiceId] = useState("genesis");
   const [navigating, setNavigating] = useState(false);
-  const [choiceIdHistory, setChoiceIdHistory] = useState([]);
+  const [choiceIdHistory, setChoiceIdHistory] = useState<string[]>([]);
 
   console.log(choiceState);
   console.log(choiceIdHistory);

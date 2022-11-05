@@ -27,7 +27,7 @@ const SBox = styled.div`
   margin-bottom: 5rem;
 `;
 
-const getPane = () => {
+const GetPane = () => {
   const [projectInit, setProjectInit] = useState(false);
   if (projectInit) {
     return (
@@ -47,7 +47,7 @@ const ID = () => {
     <SBody>
       <SMain>
         <Navbar />
-        <SBox>{getPane()}</SBox>
+        <SBox>{GetPane()}</SBox>
       </SMain>
     </SBody>
   );
