@@ -1,5 +1,69 @@
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import styled from "styled-components";
+
+interface IDestinyTreeItem {
+  id: string;
+  type: string;
+  question?: string;
+  inputs?: IInput[];
+  responses: IResponse[];
+}
+
+interface IResponse {
+  response: string;
+  action: () => string;
+}
+
+interface IInput {
+  id: string;
+  name: string;
+  placeholder: string;
+  type: string;
+}
+
+interface IDecisionLooper {
+  navigating: boolean;
+  choiceId: string;
+  destinyTree: IDestinyTreeItem[];
+  choiceState: IChoiceState;
+  setChoiceState: ISetChoiceState;
+  setChoiceId(x: string): void;
+  setChoiceIdHistory: Dispatch<SetStateAction<string[]>>;
+  setNavigating(x: boolean): void;
+  pruneState: any;
+}
+
+interface IQuestionUI {
+  question: string;
+}
+
+interface IResponseButtonsUI {
+  responses: IResponse[];
+  choiceState: IChoiceState;
+  setChoiceState: ISetChoiceState;
+  choiceId: string;
+  setChoiceId(x: string): void;
+  pruneState: any;
+  setNavigating(x: boolean): void;
+}
+
+interface IInputUI {
+  inputs: IInput[];
+  choiceState: IChoiceState;
+  setChoiceState: ISetChoiceState;
+}
+
+interface ISetChoiceState {
+  (x: (x: IChoiceState) => IChoiceState): void;
+}
+
+interface IChoiceState {
+  [key: string | number]: string;
+}
+
+interface ISetChoiceIdHistory {
+  (x: (x: string[]) => string[]): void;
+}
 
 const STitle = styled.p`
   font-size: 1rem;
@@ -51,7 +115,7 @@ const DecisionLooper = ({
   setChoiceIdHistory,
   setNavigating,
   pruneState,
-}) => {
+}: IDecisionLooper) => {
   useEffect(() => {
     !navigating &&
       setChoiceIdHistory((prevState) => {
@@ -62,6 +126,9 @@ const DecisionLooper = ({
   if (choiceId === "end") return <></>;
 
   const choice = destinyTree.find((e) => e.id === choiceId);
+
+  if (!choice) throw new Error("Choice not found");
+
   const { type, question, responses, inputs } = choice;
 
   let ui;
@@ -70,7 +137,7 @@ const DecisionLooper = ({
     case "question":
       ui = (
         <>
-          <QuestionUI question={question} />
+          <QuestionUI question={question || ""} />
           <ResponseButtonsUI
             responses={responses}
             choiceState={choiceState}
@@ -88,7 +155,7 @@ const DecisionLooper = ({
       ui = (
         <>
           <InputUI
-            inputs={inputs}
+            inputs={inputs || []}
             choiceState={choiceState}
             setChoiceState={setChoiceState}
           />
@@ -113,7 +180,7 @@ const DecisionLooper = ({
   return ui;
 };
 
-const QuestionUI = ({ question }) => {
+const QuestionUI = ({ question }: IQuestionUI) => {
   return (
     <div>
       <STitle>Question</STitle>
@@ -130,7 +197,7 @@ const ResponseButtonsUI = ({
   setChoiceId,
   pruneState,
   setNavigating,
-}) => {
+}: IResponseButtonsUI) => {
   const responseButtons = responses.map((element, index) => {
     const globalId = `buttonID-${choiceId}-${index}`;
     const inState = choiceState[choiceId] === globalId;
@@ -176,7 +243,7 @@ const ResponseButtonsUI = ({
   );
 };
 
-const InputUI = ({ inputs, choiceState, setChoiceState }) => {
+const InputUI = ({ inputs, choiceState, setChoiceState }: IInputUI) => {
   const inputUI = inputs.map((element) => {
     const { id, name, placeholder, type } = element;
 
@@ -189,7 +256,7 @@ const InputUI = ({ inputs, choiceState, setChoiceState }) => {
         placeholder={placeholder}
         value={choiceState[id] || ""}
         onChange={(e) => {
-          setChoiceState((prevState) => {
+          setChoiceState((prevState: IChoiceState) => {
             return { ...prevState, [id]: e.target.value };
           });
         }}
