@@ -1,7 +1,15 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import DecisionLooper from "./DecisionLooper";
 import DeployWallet from "./DeployWallet";
+
+interface IChoiceState {
+  amount: string;
+  accountName: string;
+  password: string;
+  personalEmail: string;
+  receiversEmail: string;
+}
 
 const SCard = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -32,8 +40,14 @@ const SBox = styled.div`
   width: 23rem;
 `;
 
-const Exp = () => {
-  const [choiceState, setChoiceState] = useState({});
+const Question = () => {
+  const [choiceState, setChoiceState] = useState<IChoiceState>({
+    amount: "",
+    accountName: "",
+    password: "",
+    personalEmail: "",
+    receiversEmail: "",
+  });
   const [choiceId, setChoiceId] = useState("genesis");
   const [navigating, setNavigating] = useState(false);
   const [choiceIdHistory, setChoiceIdHistory] = useState([]);
@@ -97,31 +111,46 @@ const Exp = () => {
     [choiceIdHistory]
   );
 
+  const theEnd = useMemo(() => {
+    return choiceId === "end";
+  }, [choiceId]);
+
   return (
     <SBox>
-      <SButtonLeft onClick={() => navigator("backward")} />
+      <SButtonLeft onClick={() => navigator(theEnd ? "freeze" : "backward")} />
       <SCard>
         {/* <p>{choiceIdHistory.join(", ")}</p> */}
-        <DecisionLooper
-          navigating={navigating}
-          choiceId={choiceId}
-          destinyTree={destinyTree}
-          choiceState={choiceState}
-          setChoiceState={setChoiceState}
-          setChoiceId={setChoiceId}
-          setChoiceIdHistory={setChoiceIdHistory}
-          setNavigating={setNavigating}
-          pruneState={pruneState}
-        />
-        <DeployWallet
-          amount={0}
-          accountName={""}
-          password={""}
-          personalEmail={""}
-          receiversEmail={""}
-        />
+        {(() => {
+          let active;
+          if (theEnd) {
+            active = (
+              <DeployWallet
+                amount={choiceState.amount}
+                accountName={choiceState.accountName}
+                password={choiceState.password}
+                personalEmail={choiceState.personalEmail}
+                receiversEmail={choiceState.receiversEmail}
+              />
+            );
+          } else {
+            active = (
+              <DecisionLooper
+                navigating={navigating}
+                choiceId={choiceId}
+                destinyTree={destinyTree}
+                choiceState={choiceState}
+                setChoiceState={setChoiceState}
+                setChoiceId={setChoiceId}
+                setChoiceIdHistory={setChoiceIdHistory}
+                setNavigating={setNavigating}
+                pruneState={pruneState}
+              />
+            );
+          }
+          return active;
+        })()}
       </SCard>
-      <SButtonRight onClick={() => navigator("forward")} />
+      <SButtonRight onClick={() => navigator(theEnd ? "freeze" : "forward")} />
     </SBox>
   );
 };
@@ -255,7 +284,7 @@ const destinyTree = [
       {
         id: "amount",
         name: "Amount",
-        placeholder: "amount to send",
+        placeholder: "amount of algos to send",
         type: "number",
       },
       {
@@ -268,7 +297,7 @@ const destinyTree = [
         id: "password",
         name: "Password",
         placeholder: "password",
-        type: "string",
+        type: "password",
       },
     ],
     responses: [
@@ -283,7 +312,7 @@ const destinyTree = [
   {
     id: "2",
     type: "question",
-    question: "Will you like us to send you an email of your credential's?",
+    question: "Will you like us to send you an email of your credentials?",
     responses: [
       {
         response: "Yes",
@@ -379,7 +408,7 @@ const destinyTree = [
       {
         id: "amount",
         name: "Amount",
-        placeholder: "amount to send",
+        placeholder: "amount of algos to send",
         type: "number",
       },
       {
@@ -392,7 +421,7 @@ const destinyTree = [
         id: "password",
         name: "Password",
         placeholder: "password",
-        type: "string",
+        type: "password",
       },
     ],
     responses: [
@@ -406,4 +435,4 @@ const destinyTree = [
   },
 ];
 
-export default Exp;
+export default Question;
