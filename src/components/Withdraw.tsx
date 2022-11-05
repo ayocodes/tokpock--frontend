@@ -1,6 +1,9 @@
-import React from "react";
+import algosdk from "algosdk";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import SubmitButton from "../components/SubmitButton";
+import { useRouter } from "next/router";
+
+import { Tokpock } from "../beaker/tokpock_client";
 
 const SModal = styled.div`
   position: fixed;
@@ -31,7 +34,7 @@ const STextArea = styled.input`
   height: 50px;
   font-size: 16px;
   padding: 0 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   border-radius: 0.5rem;
   background-color: transparent;
   resize: none;
@@ -39,7 +42,7 @@ const STextArea = styled.input`
   color: white;
 `;
 
-const SSubmitBox = styled.div`
+const SWithdrawBox = styled.div`
   display: grid;
   place-items: center;
   margin-top: 2rem;
@@ -57,9 +60,84 @@ const SRing2 = styled(SRing1)`
   top: 230.5px;
 `;
 
+const SWithdrawButton = styled.div`
+  height: 3rem;
+  width: 100%;
+  background: #565967;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+`;
+
+const SButtonText = styled.p`
+  color: white;
+  font-size: 1.25rem;
+  align-items: center;
+  font-weight: 400;
+`;
+
 const SRingBox = styled.div``;
 
 const Withdrawal = () => {
+  const router = useRouter();
+  const [walletId, setWalletId] = useState(0);
+  const [account, setAccount] = useState("");
+  const [password, setPassword] = useState("");
+  const [manager, setManager] = useState("");
+
+  useEffect(() => {
+    const id = router.query.id as string;
+    const manager = router.query.manager as string;
+    setWalletId(id ? parseFloat(id) : 0);
+    setManager(manager ? manager : "");
+  }, [router]);
+
+  const algodClient = new algosdk.Algodv2(
+    "",
+    "https://testnet-api.algonode.cloud",
+    ""
+  );
+
+  const signer = useCallback(
+    async (txnGroup: algosdk.Transaction[], sk: Uint8Array) => {
+      const sTxns = txnGroup.map((txn) => {
+        let signedTxn = txn.signTxn(sk);
+        return signedTxn;
+      });
+      return sTxns;
+    },
+    []
+  );
+
+  const withdraw = async () => {
+    const managerSKUint8 = Uint8Array.from(Buffer.from(manager, "hex"));
+    const passphrase = algosdk.secretKeyToMnemonic(managerSKUint8);
+    const myAccount = algosdk.mnemonicToSecretKey(passphrase); // TODO: cHange
+
+    const appClient = new Tokpock({
+      client: algodClient,
+      signer: (txnGroup) => signer(txnGroup, myAccount.sk),
+      sender: myAccount.addr,
+      appId: walletId,
+    });
+
+    try {
+      await appClient.claim_funds(
+        {
+          password,
+          account,
+        },
+        {
+          appAccounts: [account],
+        }
+      );
+      alert("Withdrawal Successful! 😄");
+    } catch (error) {
+      alert("Withdrawal Failed! 😭");
+    }
+  };
+
   return (
     <SModal>
       <SRingBox>
@@ -67,15 +145,37 @@ const Withdrawal = () => {
         <SRing2 src="ring.svg" alt="" />
       </SRingBox>
       <SWithdraw>
-        <STitle>Email</STitle>
-        <STextArea id="description" />
-        <STitle>Recovery Phase</STitle>
-        <STextArea id="description" />
+        <STitle>Wallet Id</STitle>
+        <STextArea
+          id="wallet"
+          value={walletId}
+          type={"number"}
+          onChange={(e) => setWalletId(parseInt(e.target.value))}
+        />
+        <STitle>Wallet Manager</STitle>
+        <STextArea
+          id="manager"
+          value={manager}
+          onChange={(e) => setManager(e.target.value)}
+        />
+        <STitle>Account To Withdraw To</STitle>
+        <STextArea
+          id="account"
+          value={account}
+          onChange={(e) => setAccount(e.target.value)}
+        />
         <STitle>Password</STitle>
-        <STextArea id="description" />
-        <SSubmitBox>
-          <SubmitButton />
-        </SSubmitBox>
+        <STextArea
+          id="password"
+          type={"password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <SWithdrawBox>
+          <SWithdrawButton>
+            <SButtonText onClick={withdraw}>Withdraw</SButtonText>
+          </SWithdrawButton>
+        </SWithdrawBox>
       </SWithdraw>
     </SModal>
   );

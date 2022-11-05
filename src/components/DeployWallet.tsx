@@ -38,6 +38,20 @@ const SP = styled.p`
   font-size: 1rem;
 `;
 
+const SInput = styled.input`
+  border: 2px solid #626575;
+  font-size: 16px;
+  padding: 0 1rem;
+  margin: 10px 0;
+  width: 100%;
+  height: 3em;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  color: white;
+`;
+
 const DeployWallet = ({
   amount,
   accountName,
@@ -52,6 +66,7 @@ const DeployWallet = ({
     appId: 0,
     appAddress: "",
     createTxId: "",
+    sk: "",
   });
 
   const myAlgo = new MyAlgoSession();
@@ -88,10 +103,7 @@ const DeployWallet = ({
     });
 
     setLogs((prev) => {
-      return [
-        ...prev,
-        `Creating Wallet...`,
-      ];
+      return [...prev, `Creating Wallet...`];
     });
 
     //----------------------------------------------------------------------------------
@@ -117,10 +129,6 @@ const DeployWallet = ({
       `Created app ${appId} with address ${appAddress} in tx ${createTxId}`
     );
 
-    console.log(parseFloat(amount) * 1000000);
-    console.log(parseFloat(amount));
-    console.log(amount);
-
     //----------------------------------------------------------------------------------
     // Create Deposit Tx
     const deposit = {
@@ -144,6 +152,12 @@ const DeployWallet = ({
     //----------------------------------------------------------------------------------
     // Create Account Manager
     var manager = algosdk.generateAccount();
+
+    const sk_hex = Buffer.from(manager.sk).toString("hex");
+
+    setTransaction((prev) => {
+      return { ...prev, sk: sk_hex };
+    });
 
     setLogs((prev) => {
       return [...prev, `Created Account Manager ${manager}...`];
@@ -193,9 +207,40 @@ const DeployWallet = ({
       console.log(result.methodResults[idx]);
     }
 
-    setLogs((prev) => {
-      return [...prev, `Deploy Successful!`];
-    });
+    if (personalEmail || receiversEmail) {
+      setLogs((prev) => {
+        return [...prev, `Sending Mail...`];
+      });
+
+      const hostname = window.location.hostname;
+      const message = `${hostname}/withdraw?id=${appId}&manager=${sk_hex}`;
+
+      const mail = {
+        email: personalEmail || receiversEmail,
+        config: {
+          message: `You can access funds and withdraw from your Tokpock Wallet! ${message}`,
+        },
+      };
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(mail),
+      };
+
+      await fetch(
+        "https://rainy-necessary-trawler.glitch.me/api/send-mail",
+        options
+      ).catch((e) => {
+        console.log(e);
+      });
+
+      setLogs((prev) => {
+        return [...prev, `Transaction Successful!`];
+      });
+    }
 
     setTimeout(() => {
       setTransComplete(true);
@@ -215,13 +260,13 @@ const DeployWallet = ({
   const href = `https://testnet.algoexplorer.io/application/${transaction.appId}`;
 
   return transComplete ? (
-    <SCenter>
-      <SP>
-        Wallet app created with id {transaction.appId} and address{" "}
-        {transaction.appAddress} in tx {transaction.createTxId}. See it{" "}
-        <a href={href}>here</a>
-      </SP>
-    </SCenter>
+    <div>
+      <SP>Save your Wallet Id</SP>
+      <SInput disabled={true} value={transaction.appId} />
+      <SP>Save your Manager</SP>
+      <SInput disabled={true} value={transaction.sk} />
+      <a href={href}>View transaction</a>
+    </div>
   ) : (
     <SCenter>
       <SP>{logs[logs.length - 1]}</SP>
