@@ -8,7 +8,7 @@ const SConnect = styled.div`
   background: linear-gradient(90deg, #bc9dfc -26.5%, #ff26c2 150.75%);
   border-radius: 17.3px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   cursor: pointer;
 `;
@@ -24,7 +24,7 @@ const ConnectWallet = () => {
   return (
     <SConnect>
       <img src="Wallet.svg" alt="" />
-      <SButtonText>Connected</SButtonText>
+      <SButtonText>Tockpock</SButtonText>
     </SConnect>
   );
 };

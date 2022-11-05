@@ -85,11 +85,11 @@ const Navbar = () => {
           <SNavButtons>
             <NavButton>Project 1</NavButton>
           </SNavButtons>
-          <img
+          {/* <img
             src="add.svg"
             alt=""
             style={{ marginLeft: "10px", cursor: "pointer" }}
-          />
+          /> */}
         </SBox>
         <ConnectWallet />
       </SNavBarContainer>

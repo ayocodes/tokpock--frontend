@@ -1,5 +1,15 @@
-import React, { useCallback, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
+import DecisionLooper from "./DecisionLooper";
+import DeployWallet from "./DeployWallet";
+
+interface IChoiceState {
+  amount: string;
+  accountName: string;
+  password: string;
+  personalEmail: string;
+  receiversEmail: string;
+}
 
 const SCard = styled.div`
   background: linear-gradient(180deg, #3e404b 0%, #232429 100%);
@@ -9,33 +19,6 @@ const SCard = styled.div`
   flex-direction: column;
   padding: 1.6rem 0;
   position: relative;
-`;
-
-const STitle = styled.p`
-  font-size: 1rem;
-  mix-blend-mode: overlay;
-  margin-top: 15px;
-  /* padding-bottom: 0.3rem; */
-`;
-
-const SQA = styled.p`
-  font-size: 1.4rem;
-  /* padding-bottom: 1rem; */
-  margin: 3px 0 10px;
-`;
-
-const SInput = styled.input`
-  border: 2px solid #626575;
-  font-size: 16px;
-  padding: 0 1rem;
-  margin: 10px 0;
-  width: 100%;
-  height: 3em;
-  border-radius: 0.5rem;
-  background-color: transparent;
-  resize: none;
-  outline: none;
-  color: white;
 `;
 
 const SButton = styled.div`
@@ -57,27 +40,23 @@ const SBox = styled.div`
   width: 23rem;
 `;
 
-const SResponseButton = styled.div`
-  height: 3rem;
-  /* padding: 5px 0; */
-  width: 100%;
-  margin: 10px 0;
-  background: #565967;
-  color: white;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-`;
-
-const Exp = () => {
-  const [choiceState, setChoiceState] = useState({});
+const Question = () => {
+  const [choiceState, setChoiceState] = useState<IChoiceState>({
+    amount: "",
+    accountName: "",
+    password: "",
+    personalEmail: "",
+    receiversEmail: "",
+  });
   const [choiceId, setChoiceId] = useState("genesis");
   const [navigating, setNavigating] = useState(false);
   const [choiceIdHistory, setChoiceIdHistory] = useState([]);
 
+  console.log(choiceState);
+  console.log(choiceIdHistory);
+
   const navigator = useCallback(
-    (action) => {
+    (action: string) => {
       let prevIdIndex;
       let newChoiceId;
 
@@ -101,17 +80,28 @@ const Exp = () => {
             ];
           break;
 
+        case "freeze":
+          prevIdIndex = choiceIdHistory.findIndex((id) => id === choiceId);
+          newChoiceId = choiceIdHistory[prevIdIndex];
+          break;
+
         default:
+          prevIdIndex = 0;
+          newChoiceId = "";
           break;
       }
 
-      prevIdIndex >= 0 && setChoiceId(newChoiceId);
+      if (prevIdIndex > 0) {
+        setChoiceId(newChoiceId);
+      } else if (action === "forward") {
+        setChoiceId(newChoiceId);
+      }
     },
     [choiceId, choiceIdHistory]
   );
 
   const pruneState = useCallback(
-    ({ choiceId }) => {
+    ({ choiceId }: { choiceId: string }) => {
       const length = choiceIdHistory.length;
       const index = choiceIdHistory.findIndex((x) => x === choiceId);
       const paddedIndex = index + 1;
@@ -121,185 +111,47 @@ const Exp = () => {
     [choiceIdHistory]
   );
 
+  const theEnd = useMemo(() => {
+    return choiceId === "end";
+  }, [choiceId]);
+
   return (
     <SBox>
-      <SButtonLeft onClick={() => navigator("backward")} />
+      <SButtonLeft onClick={() => navigator(theEnd ? "freeze" : "backward")} />
       <SCard>
         {/* <p>{choiceIdHistory.join(", ")}</p> */}
-        <DecisionLooper
-          navigating={navigating}
-          choiceId={choiceId}
-          destinyTree={destinyTree}
-          choiceState={choiceState}
-          setChoiceState={setChoiceState}
-          setChoiceId={setChoiceId}
-          setChoiceIdHistory={setChoiceIdHistory}
-          setNavigating={setNavigating}
-          pruneState={pruneState}
-        />
+        {(() => {
+          let active;
+          if (theEnd) {
+            active = (
+              <DeployWallet
+                amount={choiceState.amount}
+                accountName={choiceState.accountName}
+                password={choiceState.password}
+                personalEmail={choiceState.personalEmail}
+                receiversEmail={choiceState.receiversEmail}
+              />
+            );
+          } else {
+            active = (
+              <DecisionLooper
+                navigating={navigating}
+                choiceId={choiceId}
+                destinyTree={destinyTree}
+                choiceState={choiceState}
+                setChoiceState={setChoiceState}
+                setChoiceId={setChoiceId}
+                setChoiceIdHistory={setChoiceIdHistory}
+                setNavigating={setNavigating}
+                pruneState={pruneState}
+              />
+            );
+          }
+          return active;
+        })()}
       </SCard>
-      <SButtonRight onClick={() => navigator("forward")} />
+      <SButtonRight onClick={() => navigator(theEnd ? "freeze" : "forward")} />
     </SBox>
-  );
-};
-
-const DecisionLooper = ({
-  navigating,
-  choiceId,
-  destinyTree,
-  choiceState,
-  setChoiceState,
-  setChoiceId,
-  setChoiceIdHistory,
-  setNavigating,
-  pruneState,
-}) => {
-  useEffect(() => {
-    !navigating &&
-      setChoiceIdHistory((prevState) => {
-        return [...prevState, choiceId];
-      });
-  }, [choiceId, navigating, setChoiceIdHistory, setNavigating]);
-
-  const choice = destinyTree.find((e) => e.id === choiceId);
-  const { type, question, responses, inputs } = choice;
-
-  let ui;
-
-  switch (type) {
-    case "question":
-      ui = (
-        <>
-          <QuestionUI question={question} />
-          <ResponseButtonsUI
-            responses={responses}
-            choiceState={choiceState}
-            setChoiceState={setChoiceState}
-            choiceId={choiceId}
-            setChoiceId={setChoiceId}
-            setNavigating={setNavigating}
-            pruneState={pruneState}
-          />
-        </>
-      );
-      break;
-
-    case "input":
-      ui = (
-        <>
-          <InputUI
-            inputs={inputs}
-            choiceState={choiceState}
-            setChoiceState={setChoiceState}
-          />
-          <ResponseButtonsUI
-            responses={responses}
-            choiceState={choiceState}
-            setChoiceState={setChoiceState}
-            choiceId={choiceId}
-            setChoiceId={setChoiceId}
-            setNavigating={setNavigating}
-            pruneState={pruneState}
-          />
-        </>
-      );
-      break;
-
-    default:
-      ui = <></>;
-      break;
-  }
-
-  return ui;
-};
-
-const QuestionUI = ({ question }) => {
-  return (
-    <div>
-      <STitle>Question</STitle>
-      <SQA>{question}</SQA>
-    </div>
-  );
-};
-
-const ResponseButtonsUI = ({
-  responses,
-  choiceState,
-  setChoiceState,
-  choiceId,
-  setChoiceId,
-  pruneState,
-  setNavigating,
-}) => {
-  const responseButtons = responses.map((element, index) => {
-    const globalId = `buttonID-${choiceId}-${index}`;
-    const inState = choiceState[choiceId] === globalId;
-
-    return (
-      <SResponseButton
-        key={globalId}
-        style={{ border: !!inState ? "2px purple solid" : "0px" }}
-        onClick={() => {
-          // Tells DecisionLooper TO include newChoiceId into setChoiceIdHistory.
-          // The intent is to make a new choice EXCEPT if the choice was prev made.
-          inState ? setNavigating(true) : setNavigating(false);
-
-          // If a user goes back in their choice id history and presses another action,
-          // pruneState() clears all the choice ids ahead of it in the history array,
-          // but if the user re-selects a prev selected button the pruning is ignored.
-          !inState && pruneState({ choiceId });
-
-          const newChoiceId = element.action();
-
-          setChoiceId(newChoiceId);
-
-          setChoiceState((prevState) => {
-            return {
-              ...prevState,
-              [choiceId]: globalId,
-            };
-          });
-        }}
-      >
-        {element.response}
-      </SResponseButton>
-    );
-  });
-
-  return (
-    <div>
-      <STitle>Response</STitle>
-      <div>{responseButtons}</div>
-    </div>
-  );
-};
-
-const InputUI = ({ inputs, choiceState, setChoiceState }) => {
-  const inputUI = inputs.map((element) => {
-    const { id, name, placeholder, type } = element;
-
-    return (
-      <SInput
-        key={id}
-        type={type}
-        name={name}
-        id={id}
-        placeholder={placeholder}
-        value={choiceState[id] || ""}
-        onChange={(e) => {
-          setChoiceState((prevState) => {
-            return { ...prevState, [id]: e.target.value };
-          });
-        }}
-      />
-    );
-  });
-
-  return (
-    <div>
-      <STitle>Fill in</STitle>
-      <div>{inputUI}</div>
-    </div>
   );
 };
 
@@ -405,7 +257,6 @@ const destinyTree1 = [
   },
 ];
 
-
 const destinyTree = [
   {
     id: "genesis",
@@ -433,7 +284,7 @@ const destinyTree = [
       {
         id: "amount",
         name: "Amount",
-        placeholder: "amount to send",
+        placeholder: "amount of algos to send",
         type: "number",
       },
       {
@@ -446,7 +297,7 @@ const destinyTree = [
         id: "password",
         name: "Password",
         placeholder: "password",
-        type: "string",
+        type: "password",
       },
     ],
     responses: [
@@ -461,7 +312,7 @@ const destinyTree = [
   {
     id: "2",
     type: "question",
-    question: "Will you like us to send you an email of your credential's?",
+    question: "Will you like us to send you an email of your credentials?",
     responses: [
       {
         response: "Yes",
@@ -486,7 +337,7 @@ const destinyTree = [
         name: "PersonalEmail",
         placeholder: "email",
         type: "email",
-      }
+      },
     ],
     responses: [
       {
@@ -505,7 +356,7 @@ const destinyTree = [
       {
         response: "Create wallet",
         action: () => {
-          return "genesis";
+          return "end";
         },
       },
     ],
@@ -513,7 +364,8 @@ const destinyTree = [
   {
     id: "5",
     type: "question",
-    question: "Will you provide their email so we send them their wallet credentials?",
+    question:
+      "Will you provide their email so we send them their wallet credentials?",
     responses: [
       {
         response: "Yes",
@@ -556,7 +408,7 @@ const destinyTree = [
       {
         id: "amount",
         name: "Amount",
-        placeholder: "amount to send",
+        placeholder: "amount of algos to send",
         type: "number",
       },
       {
@@ -569,7 +421,7 @@ const destinyTree = [
         id: "password",
         name: "Password",
         placeholder: "password",
-        type: "string",
+        type: "password",
       },
     ],
     responses: [
@@ -580,7 +432,7 @@ const destinyTree = [
         },
       },
     ],
-  }
+  },
 ];
 
-export default Exp;
+export default Question;

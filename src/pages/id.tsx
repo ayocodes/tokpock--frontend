@@ -1,11 +1,10 @@
-import React, { useCallback, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Operations from "../components/Operations";
 import ProjectChoice from "../components/ProjectChoice";
-import ReflectCard from "../components/ReflectCard";
+import Question from "../components/Question";
 import ReflectIndicator from "../components/ReflectIndicator";
-import Exp from "../components/Question";
 
 const SBody = styled.div`
   display: flex;
@@ -34,7 +33,7 @@ const getPane = () => {
     return (
       <>
         <ReflectIndicator />
-        <Exp />
+        <Question />
         <Operations />
       </>
     );
