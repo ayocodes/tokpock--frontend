@@ -77,8 +77,8 @@ const ProjectChoice: React.FC<IProjectInitProps> = ({ setProjectInit }) => {
       <SProjectChoiceBox>
         <STitle>What do you want to do?</STitle>
         <SCardBox>
-          {projectChoice.map((x) => (
-            <SCard onClick={() => setProjectInit(true)} color={x.color}>
+          {projectChoice.map((x, i) => (
+            <SCard key={i} onClick={() => setProjectInit(true)} color={x.color}>
               {x.title}
             </SCard>
           ))}

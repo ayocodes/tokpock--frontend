@@ -1,5 +1,5 @@
 import algosdk, { AtomicTransactionComposer, Transaction } from "algosdk";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Tokpock } from "../beaker/tokpock_client";
 import { MyAlgoSession } from "../wallets/myalgo";
@@ -69,12 +69,11 @@ const DeployWallet = ({
     sk: "",
   });
 
-  const myAlgo = new MyAlgoSession();
+  const myAlgo = useMemo(() => new MyAlgoSession(), []);
 
-  const algodClient = new algosdk.Algodv2(
-    "",
-    "https://testnet-api.algonode.cloud",
-    ""
+  const algodClient = useMemo(
+    () => new algosdk.Algodv2("", "https://testnet-api.algonode.cloud", ""),
+    []
   );
 
   const signer = useCallback(

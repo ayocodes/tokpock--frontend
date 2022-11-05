@@ -37,7 +37,7 @@ const Operations = () => {
           <SImg src="Home.svg" alt="" />
         </a>
       </Link>
-      <a href="https://github.com/ayocodes/tokpock" target="_blank">
+      <a href="https://github.com/ayocodes/tokpock" target="_blank" rel="noreferrer">
         <SImg src="Document.svg" alt="" />
       </a>
       <SImg src="Info.svg" alt="" onClick={() => setModal(true)} />
