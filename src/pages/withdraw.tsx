@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Withdrawal from "../components/Withdraw";
 
 const Withdraw: NextPage = () => {
   return (
@@ -11,7 +12,7 @@ const Withdraw: NextPage = () => {
       </Head>
 
       <>
-        <Withdraw />
+        <Withdrawal />
       </>
     </>
   );
